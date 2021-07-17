@@ -33,20 +33,6 @@ prev.addEventListener('click', function () {
     rollSlider()
 })
 
-/*prev.addEventListener('click', function () {
-    let blockWidth = slider.scrollWidth;
-
-
-
-    if (offset <= blockWidth && offset > 0) {
-        offset -= 250;
-        sliderLine.style.right = offset + 'px';
-    } else {
-        offset = blockWidth - 250;
-        sliderLine.style.right = offset + 'px';
-    }
-
-})*/
 function rollSlider() {
     sliderLine.style.transform = 'translate(-' + count * width + 'px)';
 }
