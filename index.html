@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="ru">
 <head>
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
@@ -9,21 +9,21 @@
 </head>
 <body>
     
-    <div class="wrapper">
-        <div class="slider" id="slider">
-            <div class="slider__img" id="sliderImg">
-                <img src="images/1.jpg">
-                <img src="images/2.jpg">
-                <img src="images/3.jpg">
-                <img src="images/4.jpg">
-                <img src="images/5.jpg">
+    <div class="container">
+        <h1>Адаптивный слайдер</h1>
 
+        <div class="slider">
+            <div class="slider__line">
+                <img src="./images/1.jpg" alt="">
+                <img src="./images/2.jpg" alt="">
+                <img src="./images/3.jpg" alt="">
+                <img src="./images/4.jpg" alt="">
+                <img src="./images/5.jpg" alt="">
             </div>
         </div>
-        <div class="slider__btn">
-            <button class="prev" id="prev"> Prev </button>
-            <button class="next" id="next"> Next </button>
-        </div>
+
+        <button class="button slider-prev">Prev</button>
+        <button class="button slider-next">Next</button>
     </div>
 
     <script src="scripts/script.js"></script>
