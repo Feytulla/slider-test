@@ -1,5 +1,11 @@
 <template>
   <div class="container cotain-style">
+    <p v-if="errors.length">
+      <b>Qeyid olunan sefleri duzeldin</b>
+      <ul class="error-list mt-4 mb-4">
+        <li class="error-list__item" v-for="(error, index) in errors" :key='index'>{{ error }}</li>
+      </ul>
+    </p>
     <form v-on:submit.prevent="onSubmit">
       <div class="row">
         <div class="form-group col-md-12">
@@ -30,7 +36,7 @@
           />
         </div>
         <div class="form-group col-md-12 position-relative">
-          <div class="pop-up position-absolute">Əlavə olundu</div>
+          <div class="pop-up position-absolute" ref="pop-up">Əlavə olundu</div>
           <button class="btn btn-success mr-4">Əlavə et</button>
           <router-link to="/"
             ><button class="btn btn-dark">Geri qayıd</button></router-link
@@ -38,52 +44,6 @@
         </div>
       </div>
     </form>
-    <div>
-      Lorem ipsum dolor sit amet consectetur adipisicing elit. Enim dicta nisi
-      quisquam amet, est neque iure ratione fuga, ea, id nam praesentium fugit
-      corporis nesciunt earum error. Ipsam, odio aliquam? Lorem ipsum dolor sit
-      amet consectetur adipisicing elit. Enim dicta nisi quisquam amet, est
-      neque iure ratione fuga, ea, id nam praesentium fugit corporis nesciunt
-      earum error. Ipsam, odio aliquam? Lorem ipsum dolor sit amet consectetur
-      adipisicing elit. Enim dicta nisi quisquam amet, est neque iure ratione
-      fuga, ea, id nam praesentium fugit corporis nesciunt earum error. Ipsam,
-      odio aliquam? Lorem ipsum dolor sit amet consectetur adipisicing elit.
-      Enim dicta nisi quisquam amet, est neque iure ratione fuga, ea, id nam
-      praesentium fugit corporis nesciunt earum error. Ipsam, odio aliquam?
-      Lorem ipsum dolor sit amet consectetur adipisicing elit. Enim dicta nisi
-      quisquam amet, est neque iure ratione fuga, ea, id nam praesentium fugit
-      corporis nesciunt earum error. Ipsam, odio aliquam? Lorem ipsum dolor sit
-      amet consectetur adipisicing elit. Enim dicta nisi quisquam amet, est
-      neque iure ratione fuga, ea, id nam praesentium fugit corporis nesciunt
-      earum error. Ipsam, odio aliquam? Lorem ipsum dolor sit amet consectetur
-      adipisicing elit. Enim dicta nisi quisquam amet, est neque iure ratione
-      fuga, ea, id nam praesentium fugit corporis nesciunt earum error. Ipsam,
-      odio aliquam? Lorem ipsum dolor sit amet consectetur adipisicing elit.
-      Enim dicta nisi quisquam amet, est neque iure ratione fuga, ea, id nam
-      praesentium fugit corporis nesciunt earum error. Ipsam, odio aliquam?
-      Lorem ipsum dolor sit amet consectetur adipisicing elit. Enim dicta nisi
-      quisquam amet, est neque iure ratione fuga, ea, id nam praesentium fugit
-      corporis nesciunt earum error. Ipsam, odio aliquam? Lorem ipsum dolor sit
-      amet consectetur adipisicing elit. Enim dicta nisi quisquam amet, est
-      neque iure ratione fuga, ea, id nam praesentium fugit corporis nesciunt
-      earum error. Ipsam, odio aliquam? Lorem ipsum dolor sit amet consectetur
-      adipisicing elit. Enim dicta nisi quisquam amet, est neque iure ratione
-      fuga, ea, id nam praesentium fugit corporis nesciunt earum error. Ipsam,
-      odio aliquam? Lorem ipsum dolor sit amet consectetur adipisicing elit.
-      Enim dicta nisi quisquam amet, est neque iure ratione fuga, ea, id nam
-      praesentium fugit corporis nesciunt earum error. Ipsam, odio aliquam?
-      Lorem ipsum dolor sit amet consectetur adipisicing elit. Enim dicta nisi
-      quisquam amet, est neque iure ratione fuga, ea, id nam praesentium fugit
-      corporis nesciunt earum error. Ipsam, odio aliquam? Lorem ipsum dolor sit
-      amet consectetur adipisicing elit. Enim dicta nisi quisquam amet, est
-      neque iure ratione fuga, ea, id nam praesentium fugit corporis nesciunt
-      earum error. Ipsam, odio aliquam? Lorem ipsum dolor sit amet consectetur
-      adipisicing elit. Enim dicta nisi quisquam amet, est neque iure ratione
-      fuga, ea, id nam praesentium fugit corporis nesciunt earum error. Ipsam,
-      odio aliquam? Lorem ipsum dolor sit amet consectetur adipisicing elit.
-      Enim dicta nisi quisquam amet, est neque iure ratione fuga, ea, id nam
-      praesentium fugit corporis nesciunt earum error. Ipsam, odio aliquam?
-    </div>
   </div>
 </template>
 
@@ -92,27 +52,25 @@ export default {
   name: "add-user",
   data() {
     return {
-      name: "",
-      surname: "",
-      age: "",
+      name: null,
+      surname: null,
+      age: null,
       users: [],
+      errors: [],
     };
   },
   mounted() {
+    let vm = this
     window.addEventListener("scroll", function () {
-      const popUp = document.querySelector(".pop-up");
-      const popUpSize = popUp.getBoundingClientRect();
-      let popUpTop = popUpSize.height / popUpSize.top;
-      // let popUpButton =  popUpSize.bottom;
-      let winDov = document.body.getBoundingClientRect().bottom;
+      const popUp = vm.$refs["pop-up"];
+      if (popUp) {
+        const popUpSize = popUp.getBoundingClientRect();
+        let popUpTop = popUpSize.height / popUpSize.top;
 
-      if (popUpTop < 0) {
-        popUp.style.top = "50px";
+        if (popUpTop < 0) {
+          popUp.style.top = "50px";
+        }
       }
-      // if (popUpButton < 0) {
-      //   popUp.style.bottom = "-50px";
-      // }
-      console.log(winDov);
     });
   },
   methods: {
@@ -132,11 +90,24 @@ export default {
         this.users.push(newUser);
         localStorage.setItem("users", JSON.stringify(this.users));
 
-        this.name = "";
-        this.surname = "";
-        this.age = "";
+        this.errors = [];
+        this.name = null;
+        this.surname = null;
+        this.age = null;
 
         this.popUp();
+      } else {
+        this.errors = [];
+
+        if (!this.name) {
+          this.errors.push("Adivizi qeid elememisiniz");
+        }
+        if (!this.surname) {
+          this.errors.push("Soyadivizi qeid elememisiniz");
+        }
+        if (!this.age) {
+          this.errors.push("Yaşivi qeid elememisiniz");
+        }
       }
     },
     popUp() {
@@ -152,6 +123,9 @@ export default {
 </script>
 
 <style scoped>
+.error-list {
+  color: red;
+}
 .cotain-style {
   max-width: 500px;
   width: 100%;
@@ -161,8 +135,8 @@ export default {
 .pop-up {
   width: 120px;
   height: 30px;
-  /* visibility: hidden;
-  opacity: 0; */
+  visibility: hidden;
+  opacity: 0;
   text-align: center;
   border-radius: 10px;
   top: -40px;
@@ -170,11 +144,11 @@ export default {
   background: rgb(99, 189, 99);
   transition: all 0.5s ease-in;
 }
-/* .anime {
+.anime {
   visibility: visible;
   opacity: 1;
   animation-name: anime;
-  animation-delay: .5s;
+  animation-delay: 0.5s;
 }
 @keyframes anime {
   0% {
@@ -185,5 +159,5 @@ export default {
     visibility: visible;
     opacity: 1;
   }
-} */
+}
 </style>
